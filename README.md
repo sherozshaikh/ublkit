@@ -52,7 +52,7 @@ from ublkit import convert_file
 result = convert_file(
     xml_path="invoice.xml",
     output_format="json",
-    config_path="ublkit.yaml"
+    config_path="./config/ublkit.yaml"
 )
 
 # Result contains everything in memory
@@ -74,7 +74,7 @@ summary = convert_batch(
     input_dir="./xml_files",
     output_dir="./output",
     output_format="csv",
-    config_path="ublkit.yaml"
+    config_path="./config/ublkit.yaml"
 )
 
 print(f"Processed: {summary.total_files}")
