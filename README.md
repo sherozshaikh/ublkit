@@ -6,7 +6,7 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/ublkit.svg)](https://pypi.org/project/ublkit/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Convert UBL XML documents (Invoice, CreditNote, Order, DespatchAdvice, etc.) to JSON or CSV format with a simple, clean API.
+[ublkit](https://pypi.org/project/ublkit/) is a lightweight wrapper that converts UBL XML documents (Invoice, CreditNote, Order, DespatchAdvice, etc.) to JSON or CSV format with a simple, clean API.
 
 ---
 
