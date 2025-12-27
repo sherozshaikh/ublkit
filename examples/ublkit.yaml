@@ -1,0 +1,30 @@
+# UBL Kit Configuration - Example
+# =================================
+
+# Logging configuration (uses py-logex library)
+logging:
+  level: "INFO"
+  file: "ublkit.log"
+  rotation: "500 MB"
+  retention: "10 days"
+  compression: "zip"
+
+# Processing configuration
+processing:
+  max_workers: 4
+  encoding: "utf-8"
+
+# CSV output configuration
+csv:
+  max_records_per_file: 50000
+  preservation_method: "apostrophe"
+  key_separator: " | "
+
+# Output directories
+output:
+  summary_dir: "./summaries"
+  logs_dir: "./logs"
+
+# Feature flags
+features:
+  enable_dry_run: false

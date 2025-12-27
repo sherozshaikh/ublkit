@@ -1,0 +1,25 @@
+# Test Configuration for ublkit
+# ==============================
+
+logging:
+  level: "DEBUG"
+  file: "test_ublkit.log"
+  rotation: "100 MB"
+  retention: "3 days"
+  compression: "zip"
+
+processing:
+  max_workers: 2
+  encoding: "utf-8"
+
+csv:
+  max_records_per_file: 100
+  preservation_method: "apostrophe"
+  key_separator: " | "
+
+output:
+  summary_dir: "./test_summaries"
+  logs_dir: "./test_logs"
+
+features:
+  enable_dry_run: false

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DespatchAdvice xmlns="urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+    <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+    <cbc:ID>DSP-2024-7823</cbc:ID>
+    <cbc:IssueDate>2024-07-22</cbc:IssueDate>
+    <cbc:IssueTime>09:15:00</cbc:IssueTime>
+    <cbc:DocumentStatusCode>Shipped</cbc:DocumentStatusCode>
+    
+    <cac:OrderReference>
+        <cbc:ID>PO-2024-6612</cbc:ID>
+        <cbc:IssueDate>2024-07-10</cbc:IssueDate>
+    </cac:OrderReference>
+    
+    <cac:DespatchSupplierParty>
+        <cac:Party>
+            <cac:PartyName>
+                <cbc:Name>Nordic Food Distribution AB</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Industrigatan 88</cbc:StreetName>
+                <cbc:CityName>Stockholm</cbc:CityName>
+                <cbc:PostalZone>123 45</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>SE</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:Contact>
+                <cbc:Name>Lars Andersson</cbc:Name>
+                <cbc:Telephone>+46 8 555 0156</cbc:Telephone>
+                <cbc:ElectronicMail>shipping@nordicfood.se</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:DespatchSupplierParty>
+    
+    <cac:DeliveryCustomerParty>
+        <cac:Party>
+            <cac:PartyName>
+                <cbc:Name>Scandinavian Grocers Ltd</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Handelsgatan 22</cbc:StreetName>
+                <cbc:CityName>Gothenburg</cbc:CityName>
+                <cbc:PostalZone>411 03</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>SE</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+        </cac:Party>
+    </cac:DeliveryCustomerParty>
+    
+    <cac:Shipment>
+        <cbc:ID>SHIP-2024-4501</cbc:ID>
+        <cbc:GrossWeightMeasure unitCode="KGM">245.50</cbc:GrossWeightMeasure>
+        <cbc:NetWeightMeasure unitCode="KGM">228.00</cbc:NetWeightMeasure>
+        <cbc:TotalTransportHandlingUnitQuantity>12</cbc:TotalTransportHandlingUnitQuantity>
+        
+        <cac:Consignment>
+            <cbc:ID>CONS-2024-9871</cbc:ID>
+            <cac:CarrierParty>
+                <cac:PartyName>
+                    <cbc:Name>Swift Logistics Scandinavia</cbc:Name>
+                </cac:PartyName>
+            </cac:CarrierParty>
+        </cac:Consignment>
+        
+        <cac:Delivery>
+            <cbc:Quantity>150</cbc:Quantity>
+            <cbc:ActualDeliveryDate>2024-07-24</cbc:ActualDeliveryDate>
+            <cac:DeliveryLocation>
+                <cac:Address>
+                    <cbc:StreetName>Varumottagning, Handelsgatan 22</cbc:StreetName>
+                    <cbc:CityName>Gothenburg</cbc:CityName>
+                    <cbc:PostalZone>411 03</cbc:PostalZone>
+                    <cac:Country>
+                        <cbc:IdentificationCode>SE</cbc:IdentificationCode>
+                    </cac:Country>
+                </cac:Address>
+            </cac:DeliveryLocation>
+            <cac:EstimatedDeliveryPeriod>
+                <cbc:StartDate>2024-07-24</cbc:StartDate>
+                <cbc:StartTime>08:00:00</cbc:StartTime>
+                <cbc:EndDate>2024-07-24</cbc:EndDate>
+                <cbc:EndTime>12:00:00</cbc:EndTime>
+            </cac:EstimatedDeliveryPeriod>
+        </cac:Delivery>
+        
+        <cac:TransportHandlingUnit>
+            <cbc:ID>PLT-001</cbc:ID>
+            <cbc:TransportHandlingUnitTypeCode>Pallet</cbc:TransportHandlingUnitTypeCode>
+            <cac:ActualPackage>
+                <cbc:ID>PKG-001-A</cbc:ID>
+                <cbc:Quantity>60</cbc:Quantity>
+                <cbc:PackagingTypeCode>Box</cbc:PackagingTypeCode>
+            </cac:ActualPackage>
+        </cac:TransportHandlingUnit>
+        
+        <cac:TransportHandlingUnit>
+            <cbc:ID>PLT-002</cbc:ID>
+            <cbc:TransportHandlingUnitTypeCode>Pallet</cbc:TransportHandlingUnitTypeCode>
+            <cac:ActualPackage>
+                <cbc:ID>PKG-002-B</cbc:ID>
+                <cbc:Quantity>90</cbc:Quantity>
+                <cbc:PackagingTypeCode>Box</cbc:PackagingTypeCode>
+            </cac:ActualPackage>
+        </cac:TransportHandlingUnit>
+    </cac:Shipment>
+    
+    <cac:DespatchLine>
+        <cbc:ID>1</cbc:ID>
+        <cbc:DeliveredQuantity unitCode="EA">60</cbc:DeliveredQuantity>
+        <cbc:OutstandingQuantity unitCode="EA">0</cbc:OutstandingQuantity>
+        <cac:OrderLineReference>
+            <cbc:LineID>1</cbc:LineID>
+        </cac:OrderLineReference>
+        <cac:Item>
+            <cbc:Description>Organic Oat Milk 1L - Shelf Stable</cbc:Description>
+            <cbc:Name>Oat Milk Organic 1L</cbc:Name>
+            <cac:BuyersItemIdentification>
+                <cbc:ID>MILK-OAT-1L</cbc:ID>
+            </cac:BuyersItemIdentification>
+            <cac:SellersItemIdentification>
+                <cbc:ID>NFD-OM1000</cbc:ID>
+            </cac:SellersItemIdentification>
+        </cac:Item>
+        <cac:Shipment>
+            <cbc:ID>SHIP-2024-4501</cbc:ID>
+        </cac:Shipment>
+    </cac:DespatchLine>
+    
+    <cac:DespatchLine>
+        <cbc:ID>2</cbc:ID>
+        <cbc:DeliveredQuantity unitCode="EA">90</cbc:DeliveredQuantity>
+        <cbc:OutstandingQuantity unitCode="EA">10</cbc:OutstandingQuantity>
+        <cbc:OutstandingReason>Partial shipment - balance to follow</cbc:OutstandingReason>
+        <cac:OrderLineReference>
+            <cbc:LineID>2</cbc:LineID>
+        </cac:OrderLineReference>
+        <cac:Item>
+            <cbc:Description>Whole Grain Crispbread 250g - Rye and Seeds</cbc:Description>
+            <cbc:Name>Crispbread Rye Seeds 250g</cbc:Name>
+            <cac:BuyersItemIdentification>
+                <cbc:ID>BRD-RYE-250</cbc:ID>
+            </cac:BuyersItemIdentification>
+            <cac:SellersItemIdentification>
+                <cbc:ID>NFD-CB250</cbc:ID>
+            </cac:SellersItemIdentification>
+        </cac:Item>
+        <cac:Shipment>
+            <cbc:ID>SHIP-2024-4501</cbc:ID>
+        </cac:Shipment>
+    </cac:DespatchLine>
+</DespatchAdvice>

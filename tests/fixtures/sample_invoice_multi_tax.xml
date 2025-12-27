@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+         xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+    <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+    <cbc:ID>CA-INV-2024-5678</cbc:ID>
+    <cbc:IssueDate>2024-06-15</cbc:IssueDate>
+    <cbc:InvoiceTypeCode listID="380">Commercial Invoice</cbc:InvoiceTypeCode>
+    <cbc:DocumentCurrencyCode>CAD</cbc:DocumentCurrencyCode>
+    
+    <cac:AdditionalDocumentReference>
+        <cbc:ID>800123456RT0001</cbc:ID>
+        <cbc:DocumentTypeCode>GST</cbc:DocumentTypeCode>
+    </cac:AdditionalDocumentReference>
+    
+    <cac:AdditionalDocumentReference>
+        <cbc:ID>1234567890TQ0001</cbc:ID>
+        <cbc:DocumentTypeCode>QST</cbc:DocumentTypeCode>
+    </cac:AdditionalDocumentReference>
+    
+    <cac:AccountingSupplierParty>
+        <cac:Party>
+            <cbc:WebsiteURI>http://www.maple-supplies.ca</cbc:WebsiteURI>
+            <cac:PartyName>
+                <cbc:Name>Maple Office Supplies Ltd.</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>456 Queen Street West</cbc:StreetName>
+                <cbc:CityName>Montreal</cbc:CityName>
+                <cbc:PostalZone>H3A 1T8</cbc:PostalZone>
+                <cbc:CountrySubentity>QC</cbc:CountrySubentity>
+                <cac:Country>
+                    <cbc:IdentificationCode>CA</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID>800123456RT0001</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID>GST</cbc:ID>
+                    <cbc:Name>Goods and Services Tax</cbc:Name>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID>1234567890TQ0001</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID>QST</cbc:ID>
+                    <cbc:Name>Quebec Sales Tax</cbc:Name>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:Contact>
+                <cbc:Telephone>(514) 555-0199</cbc:Telephone>
+                <cbc:ElectronicMail>billing@maple-supplies.ca</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingSupplierParty>
+    
+    <cac:AccountingCustomerParty>
+        <cac:Party>
+            <cac:PartyName>
+                <cbc:Name>Tech Innovators Inc.</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>789 Innovation Drive</cbc:StreetName>
+                <cbc:CityName>Laval</cbc:CityName>
+                <cbc:PostalZone>H7P 0A3</cbc:PostalZone>
+                <cbc:CountrySubentity>QC</cbc:CountrySubentity>
+                <cac:Country>
+                    <cbc:IdentificationCode>CA</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
+    
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="CAD">125.00</cbc:TaxAmount>
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="CAD">2500.00</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="CAD">125.00</cbc:TaxAmount>
+            <cac:TaxCategory>
+                <cbc:ID>S</cbc:ID>
+                <cbc:Percent>5.0</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>GST</cbc:ID>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="CAD">249.75</cbc:TaxAmount>
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="CAD">2500.00</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="CAD">249.75</cbc:TaxAmount>
+            <cac:TaxCategory>
+                <cbc:ID>S</cbc:ID>
+                <cbc:Percent>9.99</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>QST</cbc:ID>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    
+    <cac:InvoiceLine>
+        <cbc:ID>1</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="EA">50</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="CAD">1500.00</cbc:LineExtensionAmount>
+        <cac:Item>
+            <cbc:Description>Ergonomic Office Chair - Model ProComfort 3000</cbc:Description>
+            <cbc:Name>Office Chair ProComfort 3000</cbc:Name>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="CAD">30.00</cbc:PriceAmount>
+        </cac:Price>
+    </cac:InvoiceLine>
+    
+    <cac:InvoiceLine>
+        <cbc:ID>2</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="EA">25</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="CAD">1000.00</cbc:LineExtensionAmount>
+        <cac:Item>
+            <cbc:Description>Adjustable Standing Desk - 60x30 inches</cbc:Description>
+            <cbc:Name>Standing Desk SD-6030</cbc:Name>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="CAD">40.00</cbc:PriceAmount>
+        </cac:Price>
+    </cac:InvoiceLine>
+    
+    <cac:LegalMonetaryTotal>
+        <cbc:LineExtensionAmount currencyID="CAD">2500.00</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount currencyID="CAD">2500.00</cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount currencyID="CAD">2874.75</cbc:TaxInclusiveAmount>
+        <cbc:PayableAmount currencyID="CAD">2874.75</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+</Invoice>

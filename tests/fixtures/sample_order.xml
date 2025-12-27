@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Order xmlns="urn:oasis:names:specification:ubl:schema:xsd:Order-2"
+       xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+       xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+    <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+    <cbc:ID>PO-2024-5432</cbc:ID>
+    <cbc:IssueDate>2024-08-12</cbc:IssueDate>
+    <cbc:IssueTime>14:30:00</cbc:IssueTime>
+    <cbc:OrderTypeCode>220</cbc:OrderTypeCode>
+    <cbc:DocumentCurrencyCode>GBP</cbc:DocumentCurrencyCode>
+    <cbc:CustomerReference>CUST-REF-9988</cbc:CustomerReference>
+    
+    <cac:BuyerCustomerParty>
+        <cac:Party>
+            <cac:PartyName>
+                <cbc:Name>British Manufacturing Ltd</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>42 Industrial Estate Road</cbc:StreetName>
+                <cbc:CityName>Birmingham</cbc:CityName>
+                <cbc:PostalZone>B7 4BB</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>GB</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:Contact>
+                <cbc:Name>Sarah Thompson</cbc:Name>
+                <cbc:Telephone>+44 121 555 0178</cbc:Telephone>
+                <cbc:ElectronicMail>s.thompson@britishmfg.co.uk</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:BuyerCustomerParty>
+    
+    <cac:SellerSupplierParty>
+        <cac:Party>
+            <cac:PartyName>
+                <cbc:Name>Yorkshire Metals &amp; Alloys PLC</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>78 Steel Works Lane</cbc:StreetName>
+                <cbc:CityName>Sheffield</cbc:CityName>
+                <cbc:PostalZone>S1 2HE</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>GB</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:Contact>
+                <cbc:Name>James Richardson</cbc:Name>
+                <cbc:Telephone>+44 114 555 0234</cbc:Telephone>
+                <cbc:ElectronicMail>sales@yorkshiremetals.co.uk</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:SellerSupplierParty>
+    
+    <cac:Delivery>
+        <cbc:Quantity>200</cbc:Quantity>
+        <cac:RequestedDeliveryPeriod>
+            <cbc:StartDate>2024-08-26</cbc:StartDate>
+            <cbc:EndDate>2024-08-30</cbc:EndDate>
+        </cac:RequestedDeliveryPeriod>
+        <cac:DeliveryLocation>
+            <cac:Address>
+                <cbc:StreetName>15 Production Way</cbc:StreetName>
+                <cbc:CityName>Coventry</cbc:CityName>
+                <cbc:PostalZone>CV6 5QS</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>GB</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:Address>
+        </cac:DeliveryLocation>
+    </cac:Delivery>
+    
+    <cac:DeliveryTerms>
+        <cbc:ID>CIF</cbc:ID>
+        <cbc:SpecialTerms>Delivery to warehouse dock, business hours only</cbc:SpecialTerms>
+    </cac:DeliveryTerms>
+    
+    <cac:PaymentTerms>
+        <cbc:Note>Net 30 days from delivery date</cbc:Note>
+    </cac:PaymentTerms>
+    
+    <cac:OrderLine>
+        <cac:LineItem>
+            <cbc:ID>1</cbc:ID>
+            <cbc:Quantity unitCode="KG">500</cbc:Quantity>
+            <cbc:LineExtensionAmount currencyID="GBP">2500.00</cbc:LineExtensionAmount>
+            <cac:Delivery>
+                <cbc:Quantity unitCode="KG">500</cbc:Quantity>
+                <cac:RequestedDeliveryPeriod>
+                    <cbc:StartDate>2024-08-26</cbc:StartDate>
+                </cac:RequestedDeliveryPeriod>
+            </cac:Delivery>
+            <cac:Item>
+                <cbc:Description>Aluminum Alloy Sheet 5mm thickness - Grade 6061</cbc:Description>
+                <cbc:Name>Aluminum Sheet 6061-T6</cbc:Name>
+                <cac:BuyersItemIdentification>
+                    <cbc:ID>AL-6061-5MM</cbc:ID>
+                </cac:BuyersItemIdentification>
+                <cac:SellersItemIdentification>
+                    <cbc:ID>YMA-AL6061-5</cbc:ID>
+                </cac:SellersItemIdentification>
+            </cac:Item>
+            <cac:Price>
+                <cbc:PriceAmount currencyID="GBP">5.00</cbc:PriceAmount>
+                <cbc:BaseQuantity unitCode="KG">1</cbc:BaseQuantity>
+            </cac:Price>
+        </cac:LineItem>
+    </cac:OrderLine>
+    
+    <cac:OrderLine>
+        <cac:LineItem>
+            <cbc:ID>2</cbc:ID>
+            <cbc:Quantity unitCode="KG">300</cbc:Quantity>
+            <cbc:LineExtensionAmount currencyID="GBP">2400.00</cbc:LineExtensionAmount>
+            <cac:Delivery>
+                <cbc:Quantity unitCode="KG">300</cbc:Quantity>
+                <cac:RequestedDeliveryPeriod>
+                    <cbc:StartDate>2024-08-28</cbc:StartDate>
+                </cac:RequestedDeliveryPeriod>
+            </cac:Delivery>
+            <cac:Item>
+                <cbc:Description>Stainless Steel Rod 20mm diameter - Grade 316</cbc:Description>
+                <cbc:Name>SS Rod 316 20mm</cbc:Name>
+                <cac:BuyersItemIdentification>
+                    <cbc:ID>SS-316-20MM</cbc:ID>
+                </cac:BuyersItemIdentification>
+                <cac:SellersItemIdentification>
+                    <cbc:ID>YMA-SS316-20</cbc:ID>
+                </cac:SellersItemIdentification>
+            </cac:Item>
+            <cac:Price>
+                <cbc:PriceAmount currencyID="GBP">8.00</cbc:PriceAmount>
+                <cbc:BaseQuantity unitCode="KG">1</cbc:BaseQuantity>
+            </cac:Price>
+        </cac:LineItem>
+    </cac:OrderLine>
+    
+    <cac:OrderLine>
+        <cac:LineItem>
+            <cbc:ID>3</cbc:ID>
+            <cbc:Quantity unitCode="EA">100</cbc:Quantity>
+            <cbc:LineExtensionAmount currencyID="GBP">1500.00</cbc:LineExtensionAmount>
+            <cac:Delivery>
+                <cbc:Quantity unitCode="EA">100</cbc:Quantity>
+                <cac:RequestedDeliveryPeriod>
+                    <cbc:StartDate>2024-08-26</cbc:StartDate>
+                </cac:RequestedDeliveryPeriod>
+            </cac:Delivery>
+            <cac:Item>
+                <cbc:Description>Copper Wire Spool 2.5mm - 100m per spool</cbc:Description>
+                <cbc:Name>Copper Wire 2.5mm</cbc:Name>
+                <cac:BuyersItemIdentification>
+                    <cbc:ID>CU-WIRE-2.5</cbc:ID>
+                </cac:BuyersItemIdentification>
+                <cac:SellersItemIdentification>
+                    <cbc:ID>YMA-CU25-100M</cbc:ID>
+                </cac:SellersItemIdentification>
+            </cac:Item>
+            <cac:Price>
+                <cbc:PriceAmount currencyID="GBP">15.00</cbc:PriceAmount>
+                <cbc:BaseQuantity unitCode="EA">1</cbc:BaseQuantity>
+            </cac:Price>
+        </cac:LineItem>
+    </cac:OrderLine>
+    
+    <cac:AnticipatedMonetaryTotal>
+        <cbc:LineExtensionAmount currencyID="GBP">6400.00</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount currencyID="GBP">6400.00</cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount currencyID="GBP">7680.00</cbc:TaxInclusiveAmount>
+        <cbc:PayableAmount currencyID="GBP">7680.00</cbc:PayableAmount>
+    </cac:AnticipatedMonetaryTotal>
+</Order>
