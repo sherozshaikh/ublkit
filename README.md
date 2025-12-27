@@ -5,7 +5,6 @@
 [![PyPI version](https://badge.fury.io/py/ublkit.svg)](https://badge.fury.io/py/ublkit)
 [![Python Versions](https://img.shields.io/pypi/pyversions/ublkit.svg)](https://pypi.org/project/ublkit/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://github.com/sherozshaikh/ublkit/workflows/Tests/badge.svg)](https://github.com/sherozshaikh/ublkit/actions)
 
 Convert UBL XML documents (Invoice, CreditNote, Order, DespatchAdvice, etc.) to JSON or CSV format with a simple, clean API.
 
