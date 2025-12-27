@@ -324,7 +324,7 @@ class XMLProcessor:
         # Validate
         is_valid, error = self._validator.validate_well_formedness(xml_content)
         if not is_valid:
-            raise etree.XMLSyntaxError(error)
+            raise ValueError(error)
 
         # Parse
         xml_tree = self._reader.parse_xml(xml_content)
