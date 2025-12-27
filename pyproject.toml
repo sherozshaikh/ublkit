@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ublkit"
-version = "0.1.0"
+version = "0.1.1"
 description = "Simple, powerful UBL XML to JSON/CSV converter with built-in exception handling"
 readme = "README.md"
 authors = [

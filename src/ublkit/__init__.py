@@ -13,7 +13,7 @@ from ublkit.core.models import ConversionResult, ProcessingSummary
 from ublkit.core.pipeline import SingleFileConverter, BatchConverter
 from py_logex import logger
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __all__ = [
     "convert_file",
     "convert_batch",
