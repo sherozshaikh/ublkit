@@ -53,12 +53,16 @@ class SingleFileConverter:
             "iso-8859-1",
             "cp1252",
         ]
-        encoding_priority = list(
-            dict.fromkeys(encoding_priority)
-        )  # Remove duplicates, preserve order
+        encoding_priority = list(dict.fromkeys(encoding_priority))
 
-        self._xml_processor = XMLProcessor(encoding_priority)
-        self._json_processor = JSONProcessor()
+        self._xml_processor = XMLProcessor(
+            encoding_priority,
+            preserve_prefix=config.xml.preserve_namespace_prefix,
+        )
+        self._json_processor = JSONProcessor(
+            flatten=config.json.flatten,
+            separator=config.json.separator,
+        )
         self._csv_processor = CSVProcessor(
             key_separator=config.csv.key_separator,
             max_records_per_file=config.csv.max_records_per_file,
@@ -89,7 +93,7 @@ class SingleFileConverter:
 
             # Convert to requested format
             if self._output_format == "json":
-                content = json_data
+                content = self._json_processor.process_json(json_data)
             elif self._output_format == "csv":
                 # Flatten to key-value pairs
                 pairs = self._csv_processor.flatten_only(
@@ -171,8 +175,14 @@ class BatchConverter:
         ]
         encoding_priority = list(dict.fromkeys(encoding_priority))
 
-        self._xml_processor = XMLProcessor(encoding_priority)
-        self._json_processor = JSONProcessor()
+        self._xml_processor = XMLProcessor(
+            encoding_priority,
+            preserve_prefix=config.xml.preserve_namespace_prefix,
+        )
+        self._json_processor = JSONProcessor(
+            flatten=config.json.flatten,
+            separator=config.json.separator,
+        )
         self._csv_processor = CSVProcessor(
             key_separator=config.csv.key_separator,
             max_records_per_file=config.csv.max_records_per_file,
@@ -267,7 +277,8 @@ class BatchConverter:
             # Write based on format
             if self._output_format == "json":
                 output_file = output_path.with_suffix(".json")
-                self._json_processor.write_file(json_data, output_file)
+                processed_json = self._json_processor.process_json(json_data)
+                self._json_processor.write_file(processed_json, output_file)
 
             elif self._output_format == "csv":
                 output_file = output_path.with_suffix(".csv")

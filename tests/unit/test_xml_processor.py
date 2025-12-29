@@ -2,14 +2,15 @@
 Unit tests for XML processing.
 """
 
-import pytest
 from pathlib import Path
 
+import pytest
+
 from ublkit.processors.xml_processor import (
-    XMLValidator,
-    XMLReader,
     NamespaceExtractor,
     XMLProcessor,
+    XMLReader,
+    XMLValidator,
 )
 
 

@@ -2,8 +2,9 @@
 Unit tests for configuration loading and validation.
 """
 
-import pytest
 from pathlib import Path
+
+import pytest
 
 from ublkit.config import UBLKitConfig
 

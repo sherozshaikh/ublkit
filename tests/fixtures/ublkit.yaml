@@ -1,6 +1,5 @@
 # Test Configuration for ublkit
 # ==============================
-
 logging:
   level: "DEBUG"
   file: "test_ublkit.log"
@@ -11,6 +10,13 @@ logging:
 processing:
   max_workers: 2
   encoding: "utf-8"
+
+xml:
+  preserve_namespace_prefix: false
+
+json:
+  flatten: false
+  separator: "/"
 
 csv:
   max_records_per_file: 100

@@ -10,7 +10,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from ublkit import convert_file, convert_batch, __version__
+from ublkit import __version__, convert_batch, convert_file
 
 
 def create_parser() -> argparse.ArgumentParser:

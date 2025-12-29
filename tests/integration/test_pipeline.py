@@ -4,10 +4,15 @@ Integration tests for complete pipeline with various UBL document types.
 Tests processing of Invoice, CreditNote, Order, and DespatchAdvice documents.
 """
 
-import pytest
+import os
+import tempfile
 from pathlib import Path
 
-from ublkit import convert_file, convert_batch
+import pytest
+import yaml
+
+from ublkit import convert_batch, convert_file
+from ublkit.config import UBLKitConfig
 
 
 class TestSingleFileConversion:
@@ -259,3 +264,83 @@ class TestProcessingMetrics:
         assert summary.end_time is not None
         assert summary.total_files == len(summary.results)
         assert summary.successful + summary.failed == summary.total_files
+
+
+class TestConfigurationOptions:
+    """Test different configuration combinations for namespace and flattening."""
+
+    @pytest.mark.parametrize(
+        "preserve_prefix,flatten,expected_keys",
+        [
+            (False, False, ["Invoice"]),  # Default: nested, no prefix
+            (True, False, ["Invoice"]),  # Nested with prefix
+            (
+                True,
+                True,
+                ["Invoice/cbc:UBLVersionID", "Invoice/cbc:ID"],
+            ),  # Flat with prefix
+            (
+                False,
+                True,
+                ["Invoice/UBLVersionID", "Invoice/ID"],
+            ),  # Flat without prefix
+        ],
+    )
+    def test_namespace_and_flatten_combinations(
+        self, fixtures_dir, preserve_prefix, flatten, expected_keys
+    ):
+        """Test various combinations of namespace preservation and JSON flattening."""
+
+        # Create dynamic config
+        config_dict = {
+            "logging": {"level": "INFO", "file": "ublkit.log"},
+            "processing": {"max_workers": 4, "encoding": "utf-8"},
+            "xml": {"preserve_namespace_prefix": preserve_prefix},
+            "json": {"flatten": flatten, "separator": "/"},
+            "csv": {
+                "max_records_per_file": 50000,
+                "preservation_method": "apostrophe",
+                "key_separator": " | ",
+            },
+            "output": {"summary_dir": "./summaries", "logs_dir": "./logs"},
+            "features": {"enable_dry_run": False},
+        }
+
+        # Write temporary config
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
+            yaml.dump(config_dict, f)
+            temp_config = f.name
+
+        try:
+            xml_file = fixtures_dir / "sample_invoice.xml"
+
+            result = convert_file(
+                xml_path=str(xml_file),
+                output_format="json",
+                config_path=temp_config,
+            )
+
+            assert result["success"] is True
+            content = result["content"]
+
+            # Verify expected key patterns exist
+            keys = list(content.keys())
+            for expected_key in expected_keys:
+                # Check if any key starts with expected pattern
+                assert any(k.startswith(expected_key) for k in keys), (
+                    f"Expected key pattern '{expected_key}' not found in: {keys[:5]}"
+                )
+
+            # Verify prefix behavior
+            if preserve_prefix and flatten:
+                # Should have keys with "cbc:" or "cac:" prefixes
+                assert any("cbc:" in k or "cac:" in k for k in keys), (
+                    "Expected namespace prefixes in flattened keys"
+                )
+            elif not preserve_prefix and flatten:
+                # Should NOT have "cbc:" or "cac:" in keys (except in values)
+                assert not any(k.count(":") > 0 for k in keys), (
+                    "Unexpected namespace prefixes in keys"
+                )
+        finally:
+            os.unlink(temp_config)

@@ -1,0 +1,30 @@
+# Test Config 3: With namespace prefix, flattened JSON
+logging:
+  level: "INFO"
+  file: "ublkit.log"
+  rotation: "500 MB"
+  retention: "10 days"
+  compression: "zip"
+
+processing:
+  max_workers: 4
+  encoding: "utf-8"
+
+xml:
+  preserve_namespace_prefix: true
+
+json:
+  flatten: true
+  separator: "/"
+
+csv:
+  max_records_per_file: 50000
+  preservation_method: "apostrophe"
+  key_separator: " | "
+
+output:
+  summary_dir: "./summaries"
+  logs_dir: "./logs"
+
+features:
+  enable_dry_run: false

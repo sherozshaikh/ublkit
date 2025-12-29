@@ -5,8 +5,9 @@ This example demonstrates converting a single UBL XML file to CSV format
 using ublkit. The conversion happens in-memory and returns flattened key-value pairs.
 """
 
-from ublkit import convert_file
 import json
+
+from ublkit import convert_file
 
 
 def main():

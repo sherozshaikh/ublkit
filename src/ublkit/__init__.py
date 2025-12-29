@@ -6,14 +6,15 @@ Main API exports for single file and batch processing.
 
 from __future__ import annotations
 
-from typing import Dict, Any
+from typing import Any, Dict
+
+from py_logex import logger
 
 from ublkit.config import UBLKitConfig
 from ublkit.core.models import ConversionResult, ProcessingSummary
-from ublkit.core.pipeline import SingleFileConverter, BatchConverter
-from py_logex import logger
+from ublkit.core.pipeline import BatchConverter, SingleFileConverter
+from ublkit.version import __version__
 
-__version__ = "0.1.1"
 __all__ = [
     "convert_file",
     "convert_batch",

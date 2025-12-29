@@ -58,6 +58,21 @@ class FeaturesConfig:
 
 
 @dataclass
+class XMLConfig:
+    """XML processing configuration."""
+
+    preserve_namespace_prefix: bool = False
+
+
+@dataclass
+class JSONConfig:
+    """JSON output configuration."""
+
+    flatten: bool = False
+    separator: str = "/"
+
+
+@dataclass
 class UBLKitConfig:
     """
     Main configuration class for ublkit.
@@ -70,6 +85,8 @@ class UBLKitConfig:
     csv: CSVConfig
     output: OutputConfig
     features: FeaturesConfig
+    xml: XMLConfig
+    json: JSONConfig
 
     @classmethod
     def from_yaml(cls, config_path: str) -> UBLKitConfig:
@@ -158,6 +175,19 @@ class UBLKitConfig:
             enable_dry_run=features_data.get("enable_dry_run", False),
         )
 
+        # Parse XML config
+        xml_data = data.get("xml", {})
+        xml_config = XMLConfig(
+            preserve_namespace_prefix=xml_data.get("preserve_namespace_prefix", False),
+        )
+
+        # Parse JSON config
+        json_data = data.get("json", {})
+        json_config = JSONConfig(
+            flatten=json_data.get("flatten", False),
+            separator=json_data.get("separator", "/"),
+        )
+
         logger.info(f"Configuration loaded successfully from: {config_path}")
 
         return cls(
@@ -166,6 +196,8 @@ class UBLKitConfig:
             csv=csv_config,
             output=output_config,
             features=features_config,
+            xml=xml_config,
+            json=json_config,
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -193,5 +225,12 @@ class UBLKitConfig:
             },
             "features": {
                 "enable_dry_run": self.features.enable_dry_run,
+            },
+            "xml": {
+                "preserve_namespace_prefix": self.xml.preserve_namespace_prefix,
+            },
+            "json": {
+                "flatten": self.json.flatten,
+                "separator": self.json.separator,
             },
         }

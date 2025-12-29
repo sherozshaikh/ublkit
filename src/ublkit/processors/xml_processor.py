@@ -146,9 +146,12 @@ class XMLToJSONMapper:
     Optimized for speed with minimal allocations and efficient iteration.
     """
 
-    def __init__(self, namespace_extractor: NamespaceExtractor) -> None:
+    def __init__(
+        self, namespace_extractor: NamespaceExtractor, preserve_prefix: bool = False
+    ) -> None:
         """Initialize XMLToJSONMapper."""
         self._namespace_extractor = namespace_extractor
+        self._preserve_prefix = preserve_prefix
 
     @log_execution
     def map_to_json(self, xml_tree: etree._Element) -> Dict[str, Any]:
@@ -208,39 +211,11 @@ class XMLToJSONMapper:
             # Usually not needed for UBL, but handle it
             pass
 
-        return result if result else None
-
-    # def _get_element_name(self, element: etree._Element) -> str:
-    #     """
-    #     Get clean element name (without namespace prefix).
-
-    #     Optimized to avoid string operations when possible.
-    #     """
-    #     tag = element.tag
-
-    #     # Fast path: no namespace
-    #     if not isinstance(tag, str):
-    #         return str(tag)
-
-    #     if "{" not in tag:
-    #         return tag
-
-    #     # Extract namespace and local name
-    #     if tag.startswith("{"):
-    #         uri, local_name = tag[1:].split("}", 1)
-    #         prefix = self._namespace_extractor.get_prefix_for_uri(uri)
-
-    #         if prefix:
-    #             return f"{prefix}:{local_name}"
-    #         return local_name
-
-    #     return tag
+        return result if result else {}
 
     def _get_element_name(self, element: etree._Element) -> str:
         """
-        Get clean element name (without namespace prefix).
-
-        Optimized to avoid string operations when possible.
+        Get element name with optional namespace prefix preservation.
         """
         tag = element.tag
 
@@ -248,21 +223,32 @@ class XMLToJSONMapper:
             return str(tag)
 
         if tag.startswith("{"):
-            return tag.split("}", 1)[1]
+            uri, local_name = tag.split("}", 1)
+            uri = uri[1:]
 
-        if ":" in tag:
+            if self._preserve_prefix:
+                prefix = self._namespace_extractor.get_prefix_for_uri(uri)
+                if prefix:
+                    return f"{prefix}:{local_name}"
+            return local_name
+
+        if ":" in tag and self._preserve_prefix:
+            return tag
+        elif ":" in tag:
             return tag.split(":", 1)[1]
 
         return tag
 
     def _get_attribute_name(self, attr_name: str) -> str:
-        """Get clean attribute name."""
-        # Attributes in UBL typically don't have namespaces
-        # But handle them if present
-        if "{" in attr_name:
-            if attr_name.startswith("{"):
-                uri, local_name = attr_name[1:].split("}", 1)
-                return f"@{local_name}"
+        """Get attribute name with optional namespace prefix preservation."""
+        if "{" in attr_name and attr_name.startswith("{"):
+            uri, local_name = attr_name[1:].split("}", 1)
+
+            if self._preserve_prefix:
+                prefix = self._namespace_extractor.get_prefix_for_uri(uri)
+                if prefix:
+                    return f"@{prefix}:{local_name}"
+            return f"@{local_name}"
 
         return f"@{attr_name}"
 
@@ -292,17 +278,14 @@ class XMLProcessor:
     Combines validation, reading, and conversion in a single interface.
     """
 
-    def __init__(self, encoding_priority: List[str]) -> None:
-        """
-        Initialize XMLProcessor.
-
-        Args:
-            encoding_priority: List of encodings to try when reading files
-        """
+    def __init__(
+        self, encoding_priority: List[str], preserve_prefix: bool = False
+    ) -> None:
+        """Initialize XMLProcessor."""
         self._validator = XMLValidator()
         self._reader = XMLReader(encoding_priority)
         self._namespace_extractor = NamespaceExtractor()
-        self._mapper = XMLToJSONMapper(self._namespace_extractor)
+        self._mapper = XMLToJSONMapper(self._namespace_extractor, preserve_prefix)
 
     def process_file(self, file_path: Path) -> Tuple[Dict[str, Any], str, str]:
         """
