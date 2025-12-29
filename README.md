@@ -103,9 +103,16 @@ processing:
 
 # CSV output configuration
 csv:
-  max_records_per_file: 50000      # Split large CSVs
+  max_records_per_file: 50000       # Split large CSVs
   preservation_method: "apostrophe" # Prevent Excel corruption
   key_separator: " | "
+
+xml:
+  preserve_namespace_prefix: true
+
+json:
+  flatten: true                  # flattened or nested json
+  separator: "/"
 
 # Output directories
 output:
