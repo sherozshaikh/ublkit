@@ -6,13 +6,11 @@ Tests processing of Invoice, CreditNote, Order, and DespatchAdvice documents.
 
 import os
 import tempfile
-from pathlib import Path
 
 import pytest
 import yaml
 
 from ublkit import convert_batch, convert_file
-from ublkit.config import UBLKitConfig
 
 
 class TestSingleFileConversion:
@@ -48,8 +46,6 @@ class TestSingleFileConversion:
         assert result["success"] is True
         assert result["ubl_document_type"] == "Invoice"
         assert "Invoice" in result["content"]
-
-        # Verify tax schemes are present
         content = result["content"]["Invoice"]
         assert "TaxTotal" in content
 
@@ -65,8 +61,6 @@ class TestSingleFileConversion:
 
         assert result["success"] is True
         assert result["ubl_document_type"] == "Invoice"
-
-        # Verify order reference is present
         content = result["content"]["Invoice"]
         assert "OrderReference" in content
 
@@ -83,8 +77,6 @@ class TestSingleFileConversion:
         assert result["success"] is True
         assert result["ubl_document_type"] == "CreditNote"
         assert "CreditNote" in result["content"]
-
-        # Verify credit note specific fields
         content = result["content"]["CreditNote"]
         assert "CreditNoteLine" in content
 
@@ -101,8 +93,6 @@ class TestSingleFileConversion:
         assert result["success"] is True
         assert result["ubl_document_type"] == "Order"
         assert "Order" in result["content"]
-
-        # Verify order specific fields
         content = result["content"]["Order"]
         assert "OrderLine" in content
 
@@ -119,8 +109,6 @@ class TestSingleFileConversion:
         assert result["success"] is True
         assert result["ubl_document_type"] == "DespatchAdvice"
         assert "DespatchAdvice" in result["content"]
-
-        # Verify despatch advice specific fields
         content = result["content"]["DespatchAdvice"]
         assert "DespatchLine" in content
         assert "Shipment" in content
@@ -143,8 +131,6 @@ class TestCSVConversion:
         assert result["output_format"] == "csv"
         assert isinstance(result["content"], list)
         assert len(result["content"]) > 0
-
-        # Verify CSV structure
         first_pair = result["content"][0]
         assert "key" in first_pair
         assert "value" in first_pair
@@ -182,8 +168,6 @@ class TestBatchProcessing:
         assert summary.total_files > 0
         assert summary.successful > 0
         assert summary.output_format == "json"
-
-        # Verify output files were created
         output_files = list(temp_output_dir.glob("*.json"))
         assert len(output_files) > 0
 
@@ -201,8 +185,6 @@ class TestBatchProcessing:
         assert summary.total_files > 0
         assert summary.successful > 0
         assert summary.output_format == "csv"
-
-        # Verify output files were created
         output_files = list(temp_output_dir.glob("*.csv"))
         assert len(output_files) > 0
 
@@ -272,26 +254,24 @@ class TestConfigurationOptions:
     @pytest.mark.parametrize(
         "preserve_prefix,flatten,expected_keys",
         [
-            (False, False, ["Invoice"]),  # Default: nested, no prefix
-            (True, False, ["Invoice"]),  # Nested with prefix
+            (False, False, ["Invoice"]),
+            (True, False, ["Invoice"]),
             (
                 True,
                 True,
                 ["Invoice/cbc:UBLVersionID", "Invoice/cbc:ID"],
-            ),  # Flat with prefix
+            ),
             (
                 False,
                 True,
                 ["Invoice/UBLVersionID", "Invoice/ID"],
-            ),  # Flat without prefix
+            ),
         ],
     )
     def test_namespace_and_flatten_combinations(
         self, fixtures_dir, preserve_prefix, flatten, expected_keys
     ):
         """Test various combinations of namespace preservation and JSON flattening."""
-
-        # Create dynamic config
         config_dict = {
             "logging": {"level": "INFO", "file": "ublkit.log"},
             "processing": {"max_workers": 4, "encoding": "utf-8"},
@@ -305,8 +285,6 @@ class TestConfigurationOptions:
             "output": {"summary_dir": "./summaries", "logs_dir": "./logs"},
             "features": {"enable_dry_run": False},
         }
-
-        # Write temporary config
         with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
             yaml.dump(config_dict, f)
             temp_config = f.name
@@ -322,23 +300,16 @@ class TestConfigurationOptions:
 
             assert result["success"] is True
             content = result["content"]
-
-            # Verify expected key patterns exist
             keys = list(content.keys())
             for expected_key in expected_keys:
-                # Check if any key starts with expected pattern
                 assert any(k.startswith(expected_key) for k in keys), (
                     f"Expected key pattern '{expected_key}' not found in: {keys[:5]}"
                 )
-
-            # Verify prefix behavior
             if preserve_prefix and flatten:
-                # Should have keys with "cbc:" or "cac:" prefixes
                 assert any("cbc:" in k or "cac:" in k for k in keys), (
                     "Expected namespace prefixes in flattened keys"
                 )
             elif not preserve_prefix and flatten:
-                # Should NOT have "cbc:" or "cac:" in keys (except in values)
                 assert not any(k.count(":") > 0 for k in keys), (
                     "Unexpected namespace prefixes in keys"
                 )

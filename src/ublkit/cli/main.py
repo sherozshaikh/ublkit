@@ -7,8 +7,11 @@ Command-line interface for single file and batch conversion.
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
+
+import polars as pl
 
 from ublkit import __version__, convert_batch, convert_file
 
@@ -42,8 +45,6 @@ Examples:
     )
 
     subparsers = parser.add_subparsers(dest="command", help="Command to execute")
-
-    # Convert command (single file)
     convert_parser = subparsers.add_parser(
         "convert",
         help="Convert a single XML file",
@@ -72,7 +73,6 @@ Examples:
         help="Path to ublkit.yaml configuration file",
     )
 
-    # Batch command
     batch_parser = subparsers.add_parser(
         "batch",
         help="Convert multiple XML files",
@@ -119,22 +119,17 @@ def handle_convert(args: argparse.Namespace) -> int:
         )
 
         if result["success"]:
-            # Write output file
             output_path = Path(args.output)
             output_path.parent.mkdir(parents=True, exist_ok=True)
 
             if args.format == "json":
-                import json
-
                 with open(output_path, "w", encoding="utf-8") as f:
                     json.dump(result["content"], f, indent=2, ensure_ascii=False)
-            else:  # csv
-                import polars as pl
-
+            else:
                 df = pl.DataFrame(result["content"])
                 df.write_csv(output_path)
 
-            print(f"✓ Success!")
+            print("✓ Success!")
             print(f"  Document type: {result['ubl_document_type']}")
             print(f"  Processing time: {result['processing_time_seconds']:.2f}s")
             print(f"  Output: {args.output}")
@@ -174,6 +169,12 @@ def handle_batch(args: argparse.Namespace) -> int:
         if summary.start_time and summary.end_time:
             duration = (summary.end_time - summary.start_time).total_seconds()
             print(f"Duration: {duration:.2f}s")
+
+        total_output_files = sum(
+            len(r.output_paths) if r.output_paths else 0 for r in summary.results
+        )
+        if total_output_files > 0:
+            print(f"Output files generated: {total_output_files}")
 
         if summary.failed > 0:
             print(f"\n⚠ {summary.failed} files failed")

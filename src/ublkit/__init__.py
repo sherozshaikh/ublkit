@@ -11,7 +11,7 @@ from typing import Any, Dict
 from py_logex import logger
 
 from ublkit.config import UBLKitConfig
-from ublkit.core.models import ConversionResult, ProcessingSummary
+from ublkit.core.models import ProcessingSummary
 from ublkit.core.pipeline import BatchConverter, SingleFileConverter
 from ublkit.version import __version__
 
@@ -20,6 +20,8 @@ __all__ = [
     "convert_batch",
     "__version__",
 ]
+
+VALID_FORMATS = {"json", "csv"}
 
 
 def convert_file(
@@ -59,20 +61,17 @@ def convert_file(
         ...     data = result["content"]
         ...     print(f"Document type: {result['ubl_document_type']}")
     """
-    # Validate output format
-    if output_format.lower() not in ["json", "csv"]:
+    output_format_lower = output_format.lower()
+    if output_format_lower not in VALID_FORMATS:
         raise ValueError(
             f"Invalid output_format: {output_format}. Must be 'json' or 'csv'"
         )
 
-    # Load configuration
     config = UBLKitConfig.from_yaml(config_path)
 
-    # Setup logging using py-logex
-    logger.info(f"Converting file: {xml_path} to {output_format}")
+    logger.info(f"Converting file: {xml_path} to {output_format_lower}")
 
-    # Create converter and process
-    converter = SingleFileConverter(config, output_format)
+    converter = SingleFileConverter(config, output_format_lower)
     result = converter.convert(xml_path)
 
     return result.to_dict()
@@ -118,22 +117,19 @@ def convert_batch(
         >>> print(f"Successful: {summary.successful}")
         >>> print(f"Failed: {summary.failed}")
     """
-    # Validate output format
-    if output_format.lower() not in ["json", "csv"]:
+    output_format_lower = output_format.lower()
+    if output_format_lower not in VALID_FORMATS:
         raise ValueError(
             f"Invalid output_format: {output_format}. Must be 'json' or 'csv'"
         )
 
-    # Load configuration
     config = UBLKitConfig.from_yaml(config_path)
 
-    # Setup logging
     logger.info(
-        f"Starting batch conversion: {input_dir} -> {output_dir} ({output_format})"
+        f"Starting batch conversion: {input_dir} -> {output_dir} ({output_format_lower})"
     )
 
-    # Create converter and process
-    converter = BatchConverter(config, output_format, input_dir, output_dir)
+    converter = BatchConverter(config, output_format_lower, input_dir, output_dir)
     summary = converter.convert()
 
     logger.info(

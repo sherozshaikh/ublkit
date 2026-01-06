@@ -40,25 +40,6 @@ class JSONProcessor:
         self._flatten = flatten
         self._flattener = JSONFlattener(separator) if flatten else None
 
-    def to_json_string(
-        self,
-        data: Dict[str, Any],
-    ) -> str:
-        """
-        Convert dictionary to JSON string.
-
-        Args:
-            data: Dictionary to convert
-
-        Returns:
-            JSON string
-        """
-        return json.dumps(
-            data,
-            indent=self._indent,
-            ensure_ascii=self._ensure_ascii,
-        )
-
     def process_json(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Process JSON data with optional flattening.

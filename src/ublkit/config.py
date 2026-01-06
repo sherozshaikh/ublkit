@@ -8,10 +8,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 import yaml
 from py_logex import logger
+
+DEFAULT_ENCODING_PRIORITY = ["utf-8", "utf-16", "iso-8859-1", "cp1252"]
+VALID_ENCODINGS = {"utf-8", "utf-16", "iso-8859-1", "ascii", "cp1252"}
+VALID_CSV_METHODS = {"apostrophe", "quotes", "brackets"}
+_CONFIG_CACHE: Dict[str, UBLKitConfig] = {}
 
 
 @dataclass
@@ -91,7 +96,7 @@ class UBLKitConfig:
     @classmethod
     def from_yaml(cls, config_path: str) -> UBLKitConfig:
         """
-        Load configuration from YAML file.
+        Load configuration from YAML file with caching.
 
         Args:
             config_path: Path to ublkit.yaml configuration file
@@ -104,6 +109,11 @@ class UBLKitConfig:
             yaml.YAMLError: If config file is invalid YAML
             ValueError: If config file has invalid values
         """
+        cache_key = str(Path(config_path).resolve())
+        if cache_key in _CONFIG_CACHE:
+            logger.debug(f"Using cached configuration from: {config_path}")
+            return _CONFIG_CACHE[cache_key]
+
         path = Path(config_path)
 
         if not path.exists():
@@ -117,7 +127,6 @@ class UBLKitConfig:
         if not isinstance(data, dict):
             raise ValueError(f"Invalid configuration file: {config_path}")
 
-        # Parse logging config
         logging_data = data.get("logging", {})
         logging_config = LoggingConfig(
             level=logging_data.get("level", "INFO"),
@@ -127,24 +136,20 @@ class UBLKitConfig:
             compression=logging_data.get("compression", "zip"),
         )
 
-        # Parse processing config
         processing_data = data.get("processing", {})
         processing_config = ProcessingConfig(
             max_workers=processing_data.get("max_workers", 4),
             encoding=processing_data.get("encoding", "utf-8"),
         )
 
-        # Validate processing config
         if processing_config.max_workers < 1:
             raise ValueError("processing.max_workers must be >= 1")
 
-        valid_encodings = ["utf-8", "utf-16", "iso-8859-1", "ascii", "cp1252"]
-        if processing_config.encoding not in valid_encodings:
+        if processing_config.encoding not in VALID_ENCODINGS:
             raise ValueError(
-                f"processing.encoding must be one of: {', '.join(valid_encodings)}"
+                f"processing.encoding must be one of: {', '.join(VALID_ENCODINGS)}"
             )
 
-        # Parse CSV config
         csv_data = data.get("csv", {})
         csv_config = CSVConfig(
             max_records_per_file=csv_data.get("max_records_per_file", 50000),
@@ -152,36 +157,30 @@ class UBLKitConfig:
             key_separator=csv_data.get("key_separator", " | "),
         )
 
-        # Validate CSV config
         if csv_config.max_records_per_file < 1:
             raise ValueError("csv.max_records_per_file must be >= 1")
 
-        valid_methods = ["apostrophe", "quotes", "brackets"]
-        if csv_config.preservation_method not in valid_methods:
+        if csv_config.preservation_method not in VALID_CSV_METHODS:
             raise ValueError(
-                f"csv.preservation_method must be one of: {', '.join(valid_methods)}"
+                f"csv.preservation_method must be one of: {', '.join(VALID_CSV_METHODS)}"
             )
 
-        # Parse output config
         output_data = data.get("output", {})
         output_config = OutputConfig(
             summary_dir=output_data.get("summary_dir", "./summaries"),
             logs_dir=output_data.get("logs_dir", "./logs"),
         )
 
-        # Parse features config
         features_data = data.get("features", {})
         features_config = FeaturesConfig(
             enable_dry_run=features_data.get("enable_dry_run", False),
         )
 
-        # Parse XML config
         xml_data = data.get("xml", {})
         xml_config = XMLConfig(
             preserve_namespace_prefix=xml_data.get("preserve_namespace_prefix", False),
         )
 
-        # Parse JSON config
         json_data = data.get("json", {})
         json_config = JSONConfig(
             flatten=json_data.get("flatten", False),
@@ -190,7 +189,7 @@ class UBLKitConfig:
 
         logger.info(f"Configuration loaded successfully from: {config_path}")
 
-        return cls(
+        config = cls(
             logging=logging_config,
             processing=processing_config,
             csv=csv_config,
@@ -199,6 +198,9 @@ class UBLKitConfig:
             xml=xml_config,
             json=json_config,
         )
+
+        _CONFIG_CACHE[cache_key] = config
+        return config
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert configuration to dictionary."""

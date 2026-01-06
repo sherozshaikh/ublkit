@@ -78,7 +78,6 @@ class XMLReader:
                 last_error = e
                 continue
 
-        # If all encodings fail, raise error
         raise IOError(
             f"Failed to read file with any supported encoding. "
             f"Tried: {', '.join(self._encoding_priority)}. "
@@ -166,7 +165,6 @@ class XMLToJSONMapper:
         """
         root_dict = self._element_to_dict(xml_tree)
 
-        # Wrap in root element name
         root_name = self._get_element_name(xml_tree)
         return {root_name: root_dict}
 
@@ -174,21 +172,20 @@ class XMLToJSONMapper:
         """
         Recursively convert an XML element to dictionary.
 
-        Optimized for speed - uses list comprehension and minimal allocations.
+        Optimized for speed - uses minimal allocations and efficient iteration.
+        Preserves tail text by appending to element value with space separator.
         """
         result: Dict[str, Any] = {}
 
-        # Handle attributes
         if element.attrib:
             for key, value in element.attrib.items():
                 attr_name = self._get_attribute_name(key)
                 result[attr_name] = value
 
-        # Handle text content
-        if element.text and element.text.strip():
-            result["value"] = element.text.strip()
+        element_text = element.text.strip() if element.text else ""
+        if element_text:
+            result["value"] = element_text
 
-        # Handle child elements - optimized iteration
         children_dict: Dict[str, List[Any]] = {}
 
         for child in element:
@@ -199,17 +196,19 @@ class XMLToJSONMapper:
                 children_dict[child_name] = []
             children_dict[child_name].append(child_value)
 
-        # Flatten single-element lists for cleaner JSON
         for key, value_list in children_dict.items():
             if len(value_list) == 1:
                 result[key] = value_list[0]
             else:
                 result[key] = value_list
 
-        # Handle tail text (text after closing tag)
-        if element.tail and element.tail.strip():
-            # Usually not needed for UBL, but handle it
-            pass
+        if element.tail:
+            tail_text = element.tail.strip()
+            if tail_text:
+                if "value" in result:
+                    result["value"] = f"{result['value']} {tail_text}"
+                else:
+                    result["value"] = tail_text
 
         return result if result else {}
 
@@ -219,10 +218,7 @@ class XMLToJSONMapper:
         """
         tag = element.tag
 
-        if not isinstance(tag, str):
-            return str(tag)
-
-        if tag.startswith("{"):
+        if isinstance(tag, str) and tag.startswith("{"):
             uri, local_name = tag.split("}", 1)
             uri = uri[1:]
 
@@ -232,12 +228,12 @@ class XMLToJSONMapper:
                     return f"{prefix}:{local_name}"
             return local_name
 
-        if ":" in tag and self._preserve_prefix:
-            return tag
-        elif ":" in tag:
+        if isinstance(tag, str) and ":" in tag:
+            if self._preserve_prefix:
+                return tag
             return tag.split(":", 1)[1]
 
-        return tag
+        return str(tag) if not isinstance(tag, str) else tag
 
     def _get_attribute_name(self, attr_name: str) -> str:
         """Get attribute name with optional namespace prefix preservation."""
@@ -264,7 +260,6 @@ class XMLToJSONMapper:
         """
         root_name = self._get_element_name(xml_tree)
 
-        # Remove namespace prefix if present
         if ":" in root_name:
             return root_name.split(":")[-1]
 
@@ -301,24 +296,18 @@ class XMLProcessor:
             IOError: If file cannot be read
             etree.XMLSyntaxError: If XML is malformed
         """
-        # Read file
         xml_content, encoding = self._reader.read_file(file_path)
 
-        # Validate
         is_valid, error = self._validator.validate_well_formedness(xml_content)
         if not is_valid:
             raise ValueError(error)
 
-        # Parse
         xml_tree = self._reader.parse_xml(xml_content)
 
-        # Extract namespaces
         self._namespace_extractor.extract_namespaces(xml_tree)
 
-        # Extract document type
         doc_type = self._mapper.extract_document_type(xml_tree)
 
-        # Convert to JSON
         json_dict = self._mapper.map_to_json(xml_tree)
 
         return json_dict, doc_type, encoding

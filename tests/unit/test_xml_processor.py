@@ -2,16 +2,9 @@
 Unit tests for XML processing.
 """
 
-from pathlib import Path
-
 import pytest
 
-from ublkit.processors.xml_processor import (
-    NamespaceExtractor,
-    XMLProcessor,
-    XMLReader,
-    XMLValidator,
-)
+from ublkit.processors.xml_processor import XMLProcessor, XMLValidator
 
 
 def test_xml_validator_valid_xml():
@@ -28,7 +21,7 @@ def test_xml_validator_valid_xml():
 def test_xml_validator_invalid_xml():
     """Test XML validator with malformed XML."""
     validator = XMLValidator()
-    xml_content = b'<?xml version="1.0"?><root><item>test</root>'  # Mismatched tags
+    xml_content = b'<?xml version="1.0"?><root><item>test</root>'
 
     is_valid, error = validator.validate_well_formedness(xml_content)
 

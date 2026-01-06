@@ -10,7 +10,20 @@ from __future__ import annotations
 import datetime
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, NamedTuple, Optional, Union
+
+
+class KeyValuePair(NamedTuple):
+    """
+    Represents a single key-value pair from flattened JSON/XML.
+
+    Used in CSV conversion to store flattened structure.
+    Implemented as NamedTuple for memory efficiency (immutable, hashable).
+    """
+
+    key: str
+    value: str
+    source_file: str
 
 
 @dataclass
@@ -54,7 +67,7 @@ class ProcessingResult:
 
     file_path: Path
     success: bool
-    output_path: Optional[Path] = None
+    output_paths: Optional[List[Path]] = None
     error_message: Optional[str] = None
     processing_time_seconds: float = 0.0
     file_size_bytes: int = 0
@@ -65,7 +78,9 @@ class ProcessingResult:
         return {
             "file": str(self.file_path),
             "success": self.success,
-            "output_path": str(self.output_path) if self.output_path else None,
+            "output_paths": (
+                [str(p) for p in self.output_paths] if self.output_paths else None
+            ),
             "error_message": self.error_message,
             "processing_time_seconds": self.processing_time_seconds,
             "file_size_bytes": self.file_size_bytes,
@@ -116,16 +131,3 @@ class ProcessingSummary:
             },
             "results": [r.to_dict() for r in self.results],
         }
-
-
-@dataclass
-class KeyValuePair:
-    """
-    Represents a single key-value pair from flattened JSON/XML.
-
-    Used in CSV conversion to store flattened structure.
-    """
-
-    key: str
-    value: str
-    source_file: str

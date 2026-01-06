@@ -6,9 +6,9 @@ Provides decorators for logging function execution and memory management.
 
 from __future__ import annotations
 
-import datetime
 import gc
 from functools import wraps
+from time import perf_counter
 from typing import Any, Callable, TypeVar
 
 from py_logex import logger
@@ -25,28 +25,30 @@ def log_execution(func: F) -> F:
     - Execution time on successful completion
     - Error details if function raises an exception
 
+    Optimized: Pre-computes qualified name in closure, uses perf_counter for timing.
+
     Example:
         @log_execution
         def process_file(path: str) -> dict:
             return {"data": "..."}
     """
+    if hasattr(func, "__self__"):
+        full_name = f"{func.__self__.__class__.__name__}.{func.__name__}"
+    else:
+        full_name = func.__name__
 
     @wraps(func)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
-        func_name = func.__name__
-        class_name = args[0].__class__.__name__ if args else ""
-        full_name = f"{class_name}.{func_name}" if class_name else func_name
-
         logger.debug(f"Entering: {full_name}")
-        start_time = datetime.datetime.now()
+        start_time = perf_counter()
 
         try:
             result = func(*args, **kwargs)
-            elapsed = (datetime.datetime.now() - start_time).total_seconds()
+            elapsed = perf_counter() - start_time
             logger.debug(f"Exiting: {full_name} (took {elapsed:.4f}s)")
             return result
         except Exception as e:
-            elapsed = (datetime.datetime.now() - start_time).total_seconds()
+            elapsed = perf_counter() - start_time
             logger.error(
                 f"Failed: {full_name} (took {elapsed:.4f}s) - {type(e).__name__}: {e}"
             )
@@ -59,13 +61,12 @@ def memory_cleanup(func: F) -> F:
     """
     Decorator to perform garbage collection after function execution.
 
-    Ensures memory is freed after function completes, useful for
-    processing large files or batch operations.
+    Collects only young generation (fast) after single file processing.
+    For production batch processing, use with care - sampling recommended.
 
     Example:
         @memory_cleanup
         def process_large_batch(files: list) -> dict:
-            # Process many files
             return {"results": "..."}
     """
 
@@ -75,6 +76,6 @@ def memory_cleanup(func: F) -> F:
             result = func(*args, **kwargs)
             return result
         finally:
-            gc.collect()
+            gc.collect(generation=0)
 
     return wrapper  # type: ignore

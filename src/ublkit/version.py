@@ -6,4 +6,4 @@ wherever version information is required. Keeping the version in one place
 prevents inconsistencies across the codebase and simplifies version bumps.
 """
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"

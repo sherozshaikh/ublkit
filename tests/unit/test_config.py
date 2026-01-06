@@ -2,8 +2,6 @@
 Unit tests for configuration loading and validation.
 """
 
-from pathlib import Path
-
 import pytest
 
 from ublkit.config import UBLKitConfig
@@ -27,8 +25,6 @@ def test_load_nonexistent_config():
 
 def test_config_validation_invalid_workers():
     """Test configuration validation with invalid max_workers."""
-    # This test would require creating a temporary invalid config
-    # For now, it's a placeholder showing test structure
     pass
 
 
